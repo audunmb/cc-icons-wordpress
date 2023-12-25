@@ -3,10 +3,10 @@
 Plugin Name: Creative Commons Icons shortcodes
 Plugin URI: 
 Description: Shortcodes to add Creative Commons icons and license links
-Version: 1.0
+Version: 0.4
 Author: Audun Myhra Bergwitz
 Author URI: 
-License: GPLv3 or later (Creative Commons-icons used in accordance with Creative Commons-policies)
+License: GPLv3 or later
 Text domain: cc-icons
 Domain path: /languages
 */
@@ -20,7 +20,7 @@ function creative_commons_style() {
 add_action( 'wp_enqueue_scripts', 'creative_commons_style' );
 
 
-
+// Main function code
 function cc_shortcodes( $atts, $content= null, $tag) {
 	extract( shortcode_atts(  array(
 
@@ -50,11 +50,11 @@ $nc_text = __('Non-Commercial', 'cc-icons');
 $sa_text = __('Share-Alike' , 'cc-icons');
 
 
-$cc_icon = '<svg viewBox="5.5 -3.5 64 64" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#cc" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#cc" /></svg>';
-$by_icon = '<svg viewBox="5.5 -3.5 64 64" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#by" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#by"/></svg>';
-$nd_icon = '<svg viewBox="0 0 64 64" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nd" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nd"/></svg>';
-$nc_icon = '<svg viewBox="5.5 -3.5 64 64" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nc" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nc"/></svg>';
-$sa_icon = '<svg viewBox="5.5 -3.5 64 64" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#sa" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#sa"/></svg>';
+$cc_icon = '<svg viewBox="5.5 -3.5 70 70" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#cc" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#cc" /></svg>';
+$by_icon = '<svg viewBox="5.5 -3.5 70 70" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#by" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#by"/></svg>';
+$nd_icon = '<svg viewBox="0 0 70 70" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nd" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nd"/></svg>';
+$nc_icon = '<svg viewBox="5.5 -3.5 70 70" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nc" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#nc"/></svg>';
+$sa_icon = '<svg viewBox="5.5 -3.5 70 70" class="cc-icon"><use fill= "currentColor" href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#sa" xlink:href = "' . plugins_url( 'cc-icons.svg', __FILE__ ) . '#sa"/></svg>';
 
 
 /*
@@ -131,12 +131,33 @@ add_shortcode( 'CC-BY-NC-ND', 'cc_shortcodes' );
 add_shortcode( 'CC-BY-NC-SA', 'cc_shortcodes' );
 
 
-
+/* add localization */
 add_action( 'init', 'wpdocs_load_textdomain' );
 
 function wpdocs_load_textdomain() {
 	load_plugin_textdomain( 'wpdocs_textdomain', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
 }
 
+/*allow for use in captions*/
+add_filter("shortcode_atts_caption", function($atts) {
+  if (isset($atts['caption'])) {
+    $atts['caption'] = do_shortcode($atts['caption']);
+  }
+  return $atts;
+});
+
+function my_caption_shortcode($atts) {
+  if (isset($atts['caption'])) {
+    // avoid endless loop
+    remove_filter( current_filter(), __FUNCTION__);
+    // apply shortcodes
+    $atts['caption'] = do_shortcode($atts['caption']);
+    // restore filter
+    add_filter(current_filter(), __FUNCTION__);
+  }
+  return $atts;
+}
+
+add_filter("shortcode_atts_caption", "my_caption_shortcode");
 
 
