@@ -3,10 +3,10 @@
 Plugin Name: Creative Commons Icons shortcodes
 Plugin URI: 
 Description: Shortcodes to add Creative Commons icons and license links
-Version: 0.4
+Version: 1.0
 Author: Audun Myhra Bergwitz
 Author URI: 
-License: GPLv3 or later
+License: GPLv3 or later (Creative Commons-icons used in accordance with Creative Commons-policies)
 Text domain: cc-icons
 Domain path: /languages
 */
