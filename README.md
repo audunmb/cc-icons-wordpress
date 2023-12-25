@@ -9,7 +9,7 @@ Each shortcode will add a link to the appriopate license and icons to represent 
 
 The icons are meant to be used with image captions, with the copyright statement. For instance like this:
 
-> Photo by <a href="link to image file">(photographer)</a>, [CC-BY-SA] via Wikimedia Commons
+> Photo by `<a href="link to image file">`(photographer)`</a>`, [CC-BY-SA] via Wikimedia Commons
 
 To install, download all files as .zip-file and install the .zip-file. 
 
